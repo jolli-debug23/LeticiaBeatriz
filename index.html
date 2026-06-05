@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>pra você, bb 💜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,900;1,9..144,500;1,9..144,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lav: #C4A8D4;
+  --lav-d: #8B5FA0;
+  --lav-p: #F0E8F8;
+  --teal: #1A4D5C;
+  --teal-m: #2A6B72;
+  --cream: #F7F2EC;
+  --ink: #0D0D0D;
+  --white: #FAFAF8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body { background:var(--cream); color:var(--ink); font-family:'Space Mono',monospace; overflow-x:hidden; }
+
+/* ===== TOAST ===== */
+#toast {
+  position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:var(--ink); color:var(--white);
+  font-size:13px; padding:12px 22px; border-radius:0;
+  border-left:4px solid var(--lav); z-index:999;
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.4s;
+  opacity:0; pointer-events:none; white-space:nowrap; max-width:90vw; text-align:center; white-space:normal;
+}
+#toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+/* ===== HERO ===== */
+#hero {
+  min-height:100svh;
+  background:var(--teal);
+  display:flex; flex-direction:column;
+  justify-content:flex-end;
+  position:relative; overflow:hidden;
+}
+.hero-img {
+  position:absolute; inset:0;
+  background:url('6.jpg') center top/cover no-repeat;
+}
+.hero-img::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to bottom, rgba(26,77,92,0.2) 0%, rgba(26,77,92,0.85) 60%, rgba(26,77,92,1) 100%);
+}
+.hero-content {
+  position:relative; z-index:2;
+  padding:40px 28px 52px;
+}
+.hero-badge {
+  display:inline-block;
+  border:1.5px solid var(--lav); color:var(--lav);
+  font-size:10px; letter-spacing:4px; padding:6px 14px;
+  text-transform:uppercase; margin-bottom:20px;
+}
+.hero-title {
+  font-family:'Fraunces',serif;
+  font-size:clamp(52px,18vw,80px);
+  font-weight:900; line-height:0.92; color:var(--white);
+}
+.hero-title em { color:var(--lav); font-style:italic; display:block; }
+.hero-sub {
+  margin-top:20px; font-size:13px; color:var(--lav); opacity:.7;
+  letter-spacing:2px;
+}
+.hero-dias {
+  margin-top:28px;
+  display:inline-flex; flex-direction:column;
+  border:2px solid var(--lav); padding:16px 22px;
+  background:rgba(139,95,160,0.15);
+}
+.hero-dias strong {
+  font-family:'Fraunces',serif; font-size:56px; font-weight:900;
+  color:var(--lav); line-height:1;
+}
+.hero-dias span { font-size:10px; letter-spacing:3px; color:var(--white); opacity:.6; margin-top:4px; }
+
+/* tap hint */
+.tap-hint {
+  position:absolute; bottom:24px; right:28px; z-index:3;
+  font-size:10px; letter-spacing:3px; color:var(--lav); opacity:.5;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:.5} 50%{opacity:.15} }
+
+/* ===== SECTIONS ===== */
+.sec { padding:72px 28px; }
+.sec-tag { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--lav-d); display:block; margin-bottom:10px; }
+.sec-h {
+  font-family:'Fraunces',serif;
+  font-size:clamp(34px,10vw,56px); font-weight:900; line-height:1;
+  color:var(--teal);
+}
+
+/* ===== GALERIA ===== */
+#galeria { background:var(--white); padding:72px 0; }
+.gal-header { padding:0 28px 40px; }
+.gal-scroll {
+  display:flex; gap:8px; overflow-x:auto; padding:0 28px 24px;
+  scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.gal-scroll::-webkit-scrollbar { display:none; }
+.gal-item {
+  flex:0 0 72vw; max-width:300px; scroll-snap-align:start;
+  aspect-ratio:3/4; overflow:hidden; position:relative;
+  background:var(--lav-p);
+  border:2px solid transparent;
+  transition:border-color 0.3s;
+}
+.gal-item.secret-active { border-color:var(--lav-d); }
+.gal-item img {
+  width:100%; height:100%; object-fit:cover; object-position:center top;
+  filter:saturate(.9);
+  transition:transform 0.5s ease, filter 0.3s;
+}
+.gal-item:active img { transform:scale(1.05); filter:saturate(1.2); }
+.gal-num {
+  position:absolute; bottom:10px; left:10px;
+  font-size:9px; letter-spacing:3px; color:var(--white);
+  background:var(--teal); padding:3px 8px; opacity:.8;
+}
+.gal-secret {
+  position:absolute; inset:0;
+  background:rgba(139,95,160,0.92);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.3s;
+  pointer-events:none;
+}
+.gal-item.secret-active .gal-secret { opacity:1; }
+.gal-secret p {
+  font-family:'Fraunces',serif; font-style:italic;
+  font-size:16px; color:var(--white); text-align:center;
+  padding:24px; line-height:1.7;
+}
+.gal-placeholder {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px;
+}
+.gal-placeholder span { font-size:10px; letter-spacing:2px; color:var(--lav-d); opacity:.5; }
+.gal-placeholder .ph-heart { font-size:28px; color:var(--lav-d); opacity:.3; }
+.gal-tip { padding:0 28px; font-size:11px; letter-spacing:2px; color:var(--lav-d); opacity:.5; }
+
+/* ===== DISTÂNCIA ===== */
+#distancia { background:var(--teal); }
+#distancia .sec-h { color:var(--white); }
+#distancia .sec-tag { color:var(--lav); }
+.dist-cards { margin-top:40px; display:flex; flex-direction:column; gap:0; }
+.dist-card {
+  border:1.5px solid var(--lav); border-bottom:none; padding:24px 22px;
+  background:rgba(255,255,255,0.04);
+  position:relative; overflow:hidden;
+}
+.dist-card:last-child { border-bottom:1.5px solid var(--lav); }
+.dist-card h3 {
+  font-family:'Fraunces',serif; font-size:22px; font-weight:700;
+  color:var(--lav); margin-bottom:8px;
+}
+.dist-card p { font-size:13px; line-height:1.9; color:rgba(255,255,255,.7); }
+.dist-num {
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  font-family:'Fraunces',serif; font-size:72px; font-weight:900;
+  color:var(--lav); opacity:.08; line-height:1;
+}
+
+/* ===== ENVELOPE ===== */
+#carta { background:var(--cream); }
+.envelope {
+  margin-top:40px;
+  border:2.5px solid var(--ink);
+  background:var(--white);
+  position:relative; overflow:hidden;
+  cursor:pointer;
+  -webkit-user-select:none; user-select:none;
+}
+.env-flap {
+  width:100%; height:90px;
+  background:var(--lav-p);
+  border-bottom:2.5px solid var(--ink);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transition:clip-path 0.5s ease;
+}
+.envelope.open .env-flap {
+  clip-path:polygon(0 0,100% 0,50% 0%);
+  height:0; border:none;
+}
+.env-cta {
+  padding:28px; text-align:center;
+  font-size:11px; letter-spacing:3px; color:var(--teal); opacity:.5;
+  transition:opacity 0.3s;
+}
+.envelope.open .env-cta { display:none; }
+.env-body {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.8s ease;
+  border-top:0; 
+}
+.envelope.open .env-body { max-height:600px; border-top:2.5px solid var(--ink); }
+.env-text {
+  padding:32px 28px;
+  font-family:'Fraunces',serif; font-style:italic;
+  font-size:17px; line-height:1.9; color:var(--teal);
+  opacity:0; transform:translateY(16px);
+  transition:opacity 0.6s 0.3s, transform 0.6s 0.3s;
+}
+.envelope.open .env-text { opacity:1; transform:none; }
+.env-assinatura {
+  display:block; text-align:right;
+  margin-top:24px; font-size:12px; letter-spacing:2px;
+  color:var(--lav-d); font-style:normal;
+}
+
+/* ===== SONHOS ===== */
+#sonhos { background:var(--lav-p); }
+.sonhos-list { margin-top:40px; display:flex; flex-direction:column; gap:0; }
+.sonho-item {
+  display:flex; align-items:flex-start; gap:16px;
+  padding:22px 0; border-bottom:1px solid var(--lav);
+  position:relative;
+}
+.sonho-item:first-child { border-top:1px solid var(--lav); }
+.sonho-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+.sonho-txt h4 {
+  font-family:'Fraunces',serif; font-size:18px; font-weight:700;
+  color:var(--teal); margin-bottom:4px;
+}
+.sonho-txt p { font-size:13px; line-height:1.8; color:#555; }
+.sonho-check {
+  position:absolute; right:0; top:50%; transform:translateY(-50%);
+  width:28px; height:28px; border:2px solid var(--lav-d);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:var(--lav-d);
+  cursor:pointer; transition:background 0.2s;
+  flex-shrink:0;
+}
+.sonho-check.checked { background:var(--lav-d); color:var(--white); border-color:var(--lav-d); }
+
+/* ===== CONTADOR ===== */
+#contador { background:var(--ink); text-align:center; }
+#contador .sec-h { color:var(--white); }
+#contador .sec-tag { color:var(--lav); }
+.cnt-grid {
+  margin-top:48px;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0; border:1.5px solid var(--lav);
+}
+.cnt-item {
+  padding:28px 16px; border-right:1.5px solid var(--lav); border-bottom:1.5px solid var(--lav);
+  position:relative;
+}
+.cnt-item:nth-child(2n) { border-right:none; }
+.cnt-item:nth-last-child(-n+2) { border-bottom:none; }
+.cnt-num {
+  font-family:'Fraunces',serif; font-size:clamp(40px,12vw,64px);
+  font-weight:900; color:var(--lav); line-height:1; display:block;
+}
+.cnt-lbl { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-top:6px; display:block; }
+/* full-width last item */
+.cnt-item.full { grid-column:span 2; border-right:none; }
+
+/* ===== EASTER EGG MODAL ===== */
+#ee-modal {
+  position:fixed; inset:0; z-index:9000;
+  background:rgba(26,74,107,0.96);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.4s;
+}
+#ee-modal.show { opacity:1; pointer-events:all; }
+.ee-box {
+  background:var(--white); max-width:340px; width:90%;
+  padding:40px 32px; text-align:center;
+  border:3px solid var(--lav);
+  transform:scale(0.8); transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+#ee-modal.show .ee-box { transform:scale(1); }
+.ee-box h3 {
+  font-family:'Fraunces',serif; font-size:28px; font-weight:900;
+  color:var(--teal); margin-bottom:16px;
+}
+.ee-box p { font-size:14px; line-height:1.8; color:#444; margin-bottom:24px; }
+.ee-close {
+  font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--lav-d); border:1.5px solid var(--lav-d);
+  background:none; padding:12px 24px; cursor:pointer; font-family:'Space Mono',monospace;
+}
+
+/* ===== FINAL ===== */
+#final {
+  background:var(--teal); padding:80px 28px; text-align:center;
+  position:relative; overflow:hidden;
+}
+#final .sec-h { color:var(--white); }
+.final-poem {
+  margin-top:32px;
+  font-family:'Fraunces',serif; font-style:italic;
+  font-size:18px; color:var(--lav); line-height:1.9;
+}
+.final-assinatura {
+  margin-top:40px; font-size:11px; letter-spacing:3px; color:rgba(255,255,255,.4);
+}
+.hearts-bg { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.hb { position:absolute; font-size:18px; color:var(--lav); opacity:0; animation:floatup linear infinite; }
+@keyframes floatup { 0%{transform:translateY(100vh);opacity:.5} 100%{transform:translateY(-5vh);opacity:0} }
+
+/* shake hint */
+@keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-3deg)} 75%{transform:rotate(3deg)} }
+.wiggle { animation:wiggle 0.5s ease; }
+
+/* scrollbar foto */
+.gal-dots {
+  display:flex; justify-content:center; gap:6px; padding:8px 28px 0;
+}
+.gal-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--lav); opacity:.25; transition:opacity 0.3s;
+}
+.gal-dot.active { opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- EASTER EGG MODAL -->
+<div id="ee-modal">
+  <div class="ee-box">
+    <h3 id="ee-title">🐊</h3>
+    <p id="ee-text"></p>
+    <button class="ee-close" onclick="fecharEE()">fechar ♥</button>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-img"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ 01 · jun · 2025</div>
+    <h1 class="hero-title">
+      Victor<br>&amp;<br><em>Leticia</em>
+    </h1>
+    <p class="hero-sub">↓ role pra baixo, bb</p>
+    <div class="hero-dias" id="hero-dias-box">
+      <strong id="dias-hero">—</strong>
+      <span>dias juntos ♥</span>
+    </div>
+  </div>
+  <div class="tap-hint" id="tap-hint">toque 3× aqui →</div>
+</section>
+
+<!-- ===== GALERIA ===== -->
+<section id="galeria">
+  <div class="gal-header">
+    <span class="sec-tag">✦ nossas memórias</span>
+    <h2 class="sec-h">a gente<br><span style="color:var(--lav-d);font-style:italic">junto</span></h2>
+  </div>
+  <div class="gal-scroll" id="galScroll">
+    <div class="gal-item" data-secret="0" onclick="toggleSecret(this)">
+      <img src="1.jpg" alt="foto 1" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>1.jpg</span></div>')">
+      <div class="gal-num">01</div>
+      <div class="gal-secret"><p id="gs0"></p></div>
+    </div>
+    <div class="gal-item" data-secret="1" onclick="toggleSecret(this)">
+      <img src="2.jpg" alt="foto 2" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>2.jpg</span></div>')">
+      <div class="gal-num">02</div>
+      <div class="gal-secret"><p id="gs1"></p></div>
+    </div>
+    <div class="gal-item" data-secret="2" onclick="toggleSecret(this)">
+      <img src="3.jpg" alt="foto 3" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>3.jpg</span></div>')">
+      <div class="gal-num">03</div>
+      <div class="gal-secret"><p id="gs2"></p></div>
+    </div>
+    <div class="gal-item" data-secret="3" onclick="toggleSecret(this)">
+      <img src="4.jpg" alt="foto 4" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>4.jpg</span></div>')">
+      <div class="gal-num">04</div>
+      <div class="gal-secret"><p id="gs3"></p></div>
+    </div>
+    <div class="gal-item" data-secret="4" onclick="toggleSecret(this)">
+      <img src="5.jpg" alt="foto 5" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>5.jpg</span></div>')">
+      <div class="gal-num">05</div>
+      <div class="gal-secret"><p id="gs4"></p></div>
+    </div>
+    <div class="gal-item" data-secret="5" onclick="toggleSecret(this)">
+      <img src="6.jpg" alt="foto 6" onerror="this.parentElement.querySelector('.gal-secret').remove(); this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin','<div class=gal-placeholder><span class=ph-heart>♥</span><span>6.jpg</span></div>')">
+      <div class="gal-num">06</div>
+      <div class="gal-secret"><p id="gs5"></p></div>
+    </div>
+  </div>
+  <div class="gal-dots" id="galDots"></div>
+  <p class="gal-tip" style="margin-top:16px;">↑ toque em qualquer foto ✦</p>
+</section>
+
+<!-- ===== DISTÂNCIA ===== -->
+<section id="distancia" class="sec">
+  <span class="sec-tag">✦ sobre nós</span>
+  <h2 class="sec-h" style="color:var(--white)">longe<br><span style="color:var(--lav);font-style:italic">mas aqui</span></h2>
+  <div class="dist-cards">
+    <div class="dist-card">
+      <div class="dist-num">1</div>
+      <h3>mesmo com a distância</h3>
+      <p>A gente se viu poucas vezes, mas adoro sua companhia. Às vezes sou meio inexpressivo kk, mas fiquei feliz em todos os encontros — e sempre que a gente consegue ter um tempinho conversando ou só de estarmos juntinhos.</p>
+    </div>
+    <div class="dist-card">
+      <div class="dist-num">2</div>
+      <h3>você é incrível</h3>
+      <p>Eu te amo. Obrigado por estar comigo e me apoiar. Espero que sejamos sempre parceiros em tudo — mesmo em momentos difíceis ou quando aconteça alguns tropeços no caminho. Que a cada dia nosso relacionamento só se fortaleça.</p>
+    </div>
+    <div class="dist-card" id="cabelo-card">
+      <div class="dist-num">3</div>
+      <h3>perfeita</h3>
+      <p>Você é linda, amo seu cabelo, seu rosto fofo, seus olhos. Te quero e te amo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CARTA / ENVELOPE ===== -->
+<section id="carta" class="sec">
+  <span class="sec-tag">✦ uma cartinha</span>
+  <h2 class="sec-h">abra <span style="color:var(--lav-d);font-style:italic">aqui</span></h2>
+  <div class="envelope" id="envelope" onclick="abrirEnvelope()">
+    <div class="env-flap"></div>
+    <div class="env-cta">— toque pra abrir —</div>
+    <div class="env-body">
+      <div class="env-text">
+        Eu sei que sou ansioso e às vezes não consigo controlar a vontade de te querer, mas eu te amo e quero que seja você.<br><br>
+        Eu penso em nós dois felizes vivendo, viajando e conquistando nossas coisas.<br><br>
+        Por isso eu desejo que, se for pra amar alguém até o fim da minha vida, que você seja essa pessoa.
+        <em class="env-assinatura">— Victor ♥</em>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SONHOS ===== -->
+<section id="sonhos" class="sec">
+  <span class="sec-tag">✦ o que eu quero</span>
+  <h2 class="sec-h">pra<br><span style="color:var(--lav-d);font-style:italic">nós dois</span></h2>
+  <div class="sonhos-list" id="sonhosList">
+    <div class="sonho-item">
+      <div class="sonho-icon">🏠</div>
+      <div class="sonho-txt">
+        <h4>nossa casa</h4>
+        <p>Não precisa ser perfeita. Só precisa ser nossa.</p>
+      </div>
+      <div class="sonho-check" onclick="checkSonho(this)">☐</div>
+    </div>
+    <div class="sonho-item">
+      <div class="sonho-icon">✈️</div>
+      <div class="sonho-txt">
+        <h4>viagem juntos</h4>
+        <p>Tipo uma viagem real, sem pressa, só a gente dois.</p>
+      </div>
+      <div class="sonho-check" onclick="checkSonho(this)">☐</div>
+    </div>
+    <div class="sonho-item">
+      <div class="sonho-icon">🌙</div>
+      <div class="sonho-txt">
+        <h4>dormir pertinho</h4>
+        <p>Sabe esse negócio de ficar longe? Vai ter fim. Um dia.</p>
+      </div>
+      <div class="sonho-check" onclick="checkSonho(this)">☐</div>
+    </div>
+    <div class="sonho-item">
+      <div class="sonho-icon">😂</div>
+      <div class="sonho-txt">
+        <h4>rir muito juntos</h4>
+        <p>Tipo aquelas risadas sem motivo de boa. Só porque sim.</p>
+      </div>
+      <div class="sonho-check" onclick="checkSonho(this)">☐</div>
+    </div>
+    <div class="sonho-item">
+      <div class="sonho-icon">🤝</div>
+      <div class="sonho-txt">
+        <h4>superar tudo junto</h4>
+        <p>Já mostramos que dá. Vai continuar dando.</p>
+      </div>
+      <div class="sonho-check" onclick="checkSonho(this)">☐</div>
+    </div>
+  </div>
+  <p id="sonhos-msg" style="display:none;margin-top:24px;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--lav-d);text-align:center;line-height:1.8;">
+    "e eu vou estar aqui pra cada um desses momentos, bb" ♥
+  </p>
+</section>
+
+<!-- ===== CONTADOR ===== -->
+<section id="contador" class="sec">
+  <span class="sec-tag">✦ tempo junto</span>
+  <h2 class="sec-h">cada<br><span style="color:var(--lav)">segundo</span></h2>
+  <div class="cnt-grid">
+    <div class="cnt-item">
+      <span class="cnt-num" id="c-anos">—</span>
+      <span class="cnt-lbl">ano</span>
+    </div>
+    <div class="cnt-item">
+      <span class="cnt-num" id="c-meses">—</span>
+      <span class="cnt-lbl">meses</span>
+    </div>
+    <div class="cnt-item">
+      <span class="cnt-num" id="c-dias">—</span>
+      <span class="cnt-lbl">dias</span>
+    </div>
+    <div class="cnt-item">
+      <span class="cnt-num" id="c-horas">—</span>
+      <span class="cnt-lbl">horas</span>
+    </div>
+    <div class="cnt-item full" id="cnt-sec-item">
+      <span class="cnt-num" id="c-sec">—</span>
+      <span class="cnt-lbl">segundos ← segura aqui</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINAL ===== -->
+<section id="final">
+  <div class="hearts-bg" id="hearts"></div>
+  <div style="position:relative;z-index:2;">
+    <span class="sec-tag" style="color:var(--lav);justify-content:center;display:block;text-align:center;">✦ feliz dia dos namorados ✦</span>
+    <h2 class="sec-h" style="color:var(--white);text-align:center;">te amo,<br><span style="color:var(--lav);font-style:italic">Leticia</span></h2>
+    <p class="final-poem">
+      "Se for pra amar alguém<br>até o fim da minha vida,<br>que seja você."
+    </p>
+    <p class="final-assinatura">— Victor, junho de 2026</p>
+    <p style="margin-top:48px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.2);text-align:center;" id="final-secret-hint">psst... tem um último segredo aqui ↓</p>
+    <div id="jacare-area" style="margin-top:16px;text-align:center;">
+      <div id="jacare-btn" onclick="abrirJacare()" style="cursor:pointer;font-size:32px;display:inline-block;" title="🐊">🐊</div>
+    </div>
+    <!-- Jacaré password modal -->
+    <div id="jacare-modal" style="display:none;margin-top:20px;max-width:320px;margin-inline:auto;">
+      <div style="border:2px solid var(--lav);background:rgba(0,0,0,0.4);padding:28px 24px;text-align:center;">
+        <p style="font-size:11px;letter-spacing:3px;color:var(--lav);margin-bottom:8px;text-transform:uppercase;">🐊 código secreto</p>
+        <p style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.7;">o que um jacaré foi fazer<br>numa loja de roupas?</p>
+        <input id="jacare-input" type="text" placeholder="resposta aqui..." autocomplete="off" autocorrect="off" spellcheck="false"
+          style="width:100%;background:rgba(255,255,255,0.08);border:1.5px solid var(--lav);color:var(--white);font-family:'Space Mono',monospace;font-size:14px;padding:12px 16px;outline:none;text-align:center;letter-spacing:1px;"
+          oninput="verificarJacare(this.value)">
+        <p id="jacare-feedback" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.3);min-height:18px;"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ===== SEGREDOS DAS FOTOS =====
+const fotoSecrets = [
+  "esse sorriso do seu aí... meu deus. fica assim sempre 😭💜",
+  "lembra desse dia? eu lembro de tudo. de tudo mesmo.",
+  "olha você linda assim e ainda finge que não sabe 🥹",
+  "esse é um dos meus favoritos. o jeito que você tá aqui...",
+  "cada foto que a gente tira eu penso: sorte a minha, cara.",
+  "e esse cabelo então? para. simplesmente para. 🤍"
+];
+fotoSecrets.forEach((s, i) => {
+  const el = document.getElementById('gs' + i);
+  if (el) el.textContent = s;
+});
+
+// ===== GALERIA DOTS =====
+const galScroll = document.getElementById('galScroll');
+const galDots = document.getElementById('galDots');
+const items = galScroll.querySelectorAll('.gal-item');
+items.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'gal-dot' + (i===0?' active':'');
+  galDots.appendChild(d);
+});
+galScroll.addEventListener('scroll', () => {
+  const idx = Math.round(galScroll.scrollLeft / (galScroll.clientWidth * 0.72));
+  galDots.querySelectorAll('.gal-dot').forEach((d, i) => d.classList.toggle('active', i===idx));
+});
+
+// ===== TOGGLE SECRET FOTO =====
+function toggleSecret(el) {
+  const wasActive = el.classList.contains('secret-active');
+  document.querySelectorAll('.gal-item').forEach(g => g.classList.remove('secret-active'));
+  if (!wasActive) el.classList.add('secret-active');
+}
+
+// ===== TOAST =====
+function toast(msg, dur=3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ===== EASTER EGG MODAL =====
+function abrirEE(titulo, texto) {
+  document.getElementById('ee-title').textContent = titulo;
+  document.getElementById('ee-text').innerHTML = texto.replace(/\n/g, '<br>');
+  document.getElementById('ee-modal').classList.add('show');
+}
+function fecharEE() { document.getElementById('ee-modal').classList.remove('show'); }
+
+// ===== HERO 3 TOQUES =====
+let heroTaps = 0, heroTimer;
+document.getElementById('tap-hint').addEventListener('click', () => {
+  heroTaps++;
+  clearTimeout(heroTimer);
+  heroTimer = setTimeout(() => heroTaps = 0, 1500);
+  if (heroTaps >= 3) {
+    heroTaps = 0;
+    abrirEE('🐊', 'psst... rola até o final do site pra encontrar o segredo 👀');
+  } else {
+    toast('mais ' + (3 - heroTaps) + '× aqui...');
+  }
+});
+
+// ===== ENVELOPE =====
+function abrirEnvelope() {
+  const e = document.getElementById('envelope');
+  if (!e.classList.contains('open')) {
+    e.classList.add('open');
+    setTimeout(() => toast('📮 carta aberta ♥', 2000), 800);
+  }
+}
+
+// ===== SONHOS CHECK =====
+let sonhosChecked = 0;
+function checkSonho(el) {
+  el.classList.toggle('checked');
+  el.textContent = el.classList.contains('checked') ? '✓' : '☐';
+  sonhosChecked = document.querySelectorAll('.sonho-check.checked').length;
+  if (sonhosChecked === 5) {
+    document.getElementById('sonhos-msg').style.display = 'block';
+    toast('você marcou tudo, bb 🥹💜', 3500);
+  }
+}
+
+// ===== CONTADOR =====
+const inicio = new Date('2025-06-01T00:00:00');
+function atualizar() {
+  const agora = new Date();
+  const diff = agora - inicio;
+  const totalSeg = Math.floor(diff / 1000);
+  const totalMin = Math.floor(totalSeg / 60);
+  const totalHoras = Math.floor(totalMin / 60);
+  const totalDias = Math.floor(totalHoras / 24);
+
+  const anos = Math.floor(totalDias / 365);
+  const meses = Math.floor((totalDias % 365) / 30);
+  const dias = totalDias % 30;
+  const horas = totalHoras % 24;
+  const seg = totalSeg % 60;
+
+  document.getElementById('dias-hero').textContent = totalDias;
+  document.getElementById('c-anos').textContent = anos;
+  document.getElementById('c-meses').textContent = meses;
+  document.getElementById('c-dias').textContent = dias;
+  document.getElementById('c-horas').textContent = horas;
+  document.getElementById('c-sec').textContent = String(seg).padStart(2,'0');
+}
+atualizar();
+setInterval(atualizar, 1000);
+
+// ===== CONTADOR EASTER EGG (long press) =====
+let secTimer;
+document.getElementById('cnt-sec-item').addEventListener('touchstart', () => {
+  secTimer = setTimeout(() => abrirEE('⏳', 'cada segundo que passa é mais um segundo que eu gostei de você. não tem como parar isso não 💜'), 1500);
+});
+document.getElementById('cnt-sec-item').addEventListener('touchend', () => clearTimeout(secTimer));
+
+// ===== CABELO EASTER EGG =====
+let cabeloTaps = 0, cabeloTimer;
+document.getElementById('cabelo-card').addEventListener('click', () => {
+  cabeloTaps++;
+  clearTimeout(cabeloTimer);
+  cabeloTimer = setTimeout(() => cabeloTaps = 0, 2000);
+  if (cabeloTaps >= 5) {
+    cabeloTaps = 0;
+    abrirEE('🤍', 'ok mas é sério que o cabelo dela é coisa mais linda que existe? COISA MAIS LINDA. pode perguntar pra qualquer um. falei.');
+  } else if (cabeloTaps === 1) {
+    toast('toca mais ' + (5 - cabeloTaps) + '× 👀');
+  }
+});
+
+// ===== JACARÉ PASSWORD =====
+function abrirJacare() {
+  const modal = document.getElementById('jacare-modal');
+  const isHidden = modal.style.display === 'none' || modal.style.display === '';
+  modal.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    document.getElementById('jacare-input').value = '';
+    document.getElementById('jacare-feedback').textContent = '';
+    document.getElementById('jacare-input').style.borderColor = 'var(--lav)';
+  }
+}
+
+function verificarJacare(val) {
+  const normalized = val.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const fb = document.getElementById('jacare-feedback');
+  const aceitas = [
+    'comer macas','comer maca','comer as macas',
+    'macas','maca','as macas',
+    'comer maca!','comer macas!','comer as macas!'
+  ];
+  if (aceitas.includes(normalized)) {
+    const inp = document.getElementById('jacare-input');
+    inp.style.borderColor = '#7fcfb0';
+    fb.style.color = '#7fcfb0';
+    fb.textContent = '✓ código aceito!';
+    inp.blur();
+    setTimeout(() => {
+      document.getElementById('jacare-modal').style.display = 'none';
+      abrirEE('🐊🍎 verificado!', 'yep, é você de verdade!\n\noi, lindinha 💜\n\nfeliz 1 ano, bb. te amo muito.');
+    }, 800);
+  } else if (normalized.length > 3) {
+    fb.style.color = 'rgba(255,255,255,.4)';
+    fb.textContent = normalized.length > 6 ? 'hmm... não é bem isso 👀' : '...';
+  } else {
+    fb.textContent = '';
+  }
+}
+
+// ===== HEARTS FINAL =====
+const heartsEl = document.getElementById('hearts');
+['♥','★','✦','♡'].forEach((s, i) => {
+  for (let j = 0; j < 5; j++) {
+    const h = document.createElement('span');
+    h.className = 'hb';
+    h.textContent = s;
+    h.style.cssText = `left:${Math.random()*100}%;animation-duration:${10+Math.random()*10}s;animation-delay:${Math.random()*8}s;font-size:${14+Math.random()*14}px`;
+    heartsEl.appendChild(h);
+  }
+});
+
+// ===== SHAKE to reveal easter egg =====
+let lastX=0, lastY=0, lastZ=0, shakeCount=0;
+if (window.DeviceMotionEvent) {
+  window.addEventListener('devicemotion', e => {
+    const a = e.accelerationIncludingGravity;
+    if (!a) return;
+    const dx=Math.abs(a.x-lastX), dy=Math.abs(a.y-lastY), dz=Math.abs(a.z-lastZ);
+    if (dx+dy+dz > 30) {
+      shakeCount++;
+      if (shakeCount === 1) toast('🐊 agita mais...', 1500);
+      if (shakeCount >= 3) {
+        shakeCount = 0;
+        abrirEE('🎉 você chacoalhou!', 'tá bem, tá bem — encontrei você! oi bb 💜\n\njá que você encontrou isso: saiba que eu fico pensando em você mais do que deveria. sem arrependimento nenhum.');
+      }
+    }
+    lastX=a.x; lastY=a.y; lastZ=a.z;
+  });
+}
+
+// ===== SCROLL REVEAL =====
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.style.opacity='1';
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.dist-card, .sonho-item').forEach(el => {
+  el.style.opacity='0';
+  el.style.transition='opacity 0.6s ease';
+  secObs.observe(el);
+});
+</script>
+</body>
+</html>
