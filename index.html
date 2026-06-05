@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>pra você, bb 💜</title>
+<title>Pra você, momor 🤍</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,900;1,9..144,500;1,9..144,900&display=swap" rel="stylesheet">
 <style>
@@ -400,22 +400,22 @@ body { background:var(--cream); color:var(--ink); font-family:'Space Mono',monos
 <!-- ===== DISTÂNCIA ===== -->
 <section id="distancia" class="sec">
   <span class="sec-tag">✦ sobre nós</span>
-  <h2 class="sec-h" style="color:var(--white)">longe<br><span style="color:var(--lav);font-style:italic">mas aqui</span></h2>
+  <h2 class="sec-h" style="color:var(--white)">Estamos<br><span style="color:var(--lav);font-style:italic">juntos</span></h2>
   <div class="dist-cards">
     <div class="dist-card">
       <div class="dist-num">1</div>
-      <h3>mesmo com a distância</h3>
-      <p>A gente se viu poucas vezes, mas adoro sua companhia. Às vezes sou meio inexpressivo kk, mas fiquei feliz em todos os encontros — e sempre que a gente consegue ter um tempinho conversando ou só de estarmos juntinhos.</p>
+      <h3>Mesmo com a distância</h3>
+      <p>A gente se viu poucas vezes, mas adoro sua companhia. Às vezes sou meio inexpressivo kk, mas fiquei muito feliz em todos os encontros, e sempre que a gente consegue ter um tempinho conversando ou só de estarmos juntinhos.</p>
     </div>
     <div class="dist-card">
       <div class="dist-num">2</div>
-      <h3>você é incrível</h3>
-      <p>Eu te amo. Obrigado por estar comigo e me apoiar. Espero que sejamos sempre parceiros em tudo — mesmo em momentos difíceis ou quando aconteça alguns tropeços no caminho. Que a cada dia nosso relacionamento só se fortaleça.</p>
+      <h3>Você é Incrível</h3>
+      <p>Eu te amo. Obrigado por estar comigo e me apoiar. Espero que sejamos sempre parceiros em tudo, mesmo em momentos difíceis ou quando aconteça alguns tropeços no caminho. Que a cada dia nosso relacionamento só se fortaleça.</p>
     </div>
     <div class="dist-card" id="cabelo-card">
       <div class="dist-num">3</div>
-      <h3>perfeita</h3>
-      <p>Você é linda, amo seu cabelo, seu rosto fofo, seus olhos. Te quero e te amo.</p>
+      <h3>Perfeita 🤍</h3>
+      <p>Você é linda, amo seu cabelo, seu rosto fofo, seus olhos. Você é um tesão. Te quero e te amo.</p>
     </div>
   </div>
 </section>
@@ -510,7 +510,11 @@ body { background:var(--cream); color:var(--ink); font-family:'Space Mono',monos
       <span class="cnt-num" id="c-horas">—</span>
       <span class="cnt-lbl">horas</span>
     </div>
-    <div class="cnt-item full" id="cnt-sec-item">
+    <div class="cnt-item" id="cnt-minutos">
+      <span class="cnt-num" id="c-min">—</span>
+      <span class="cnt-lbl">minutos</span>
+    </div>
+    <div class="cnt-item" id="cnt-sec-item">
       <span class="cnt-num" id="c-sec">—</span>
       <span class="cnt-lbl">segundos ← segura aqui</span>
     </div>
@@ -548,12 +552,12 @@ body { background:var(--cream); color:var(--ink); font-family:'Space Mono',monos
 <script>
 // ===== SEGREDOS DAS FOTOS =====
 const fotoSecrets = [
-  "esse sorriso do seu aí... meu deus. fica assim sempre 😭💜",
-  "lembra desse dia? eu lembro de tudo. de tudo mesmo.",
-  "olha você linda assim e ainda finge que não sabe 🥹",
-  "esse é um dos meus favoritos. o jeito que você tá aqui...",
-  "cada foto que a gente tira eu penso: sorte a minha, cara.",
-  "e esse cabelo então? para. simplesmente para. 🤍"
+  "Eu te amo 🤍",
+  "Nosso começo 🤍 kk",
+  "Seu olhos são lindos 😍👁",
+  "🤔",
+  "Fofa 🤍",
+  "Só foto feia kkk, depois tiramos umas melhor 🤍"
 ];
 fotoSecrets.forEach((s, i) => {
   const el = document.getElementById('gs' + i);
@@ -646,6 +650,7 @@ function atualizar() {
   const meses = Math.floor((totalDias % 365) / 30);
   const dias = totalDias % 30;
   const horas = totalHoras % 24;
+  const minutos = totalMin % 60;
   const seg = totalSeg % 60;
 
   document.getElementById('dias-hero').textContent = totalDias;
@@ -653,6 +658,7 @@ function atualizar() {
   document.getElementById('c-meses').textContent = meses;
   document.getElementById('c-dias').textContent = dias;
   document.getElementById('c-horas').textContent = horas;
+  document.getElementById('c-min').textContent = minutos;
   document.getElementById('c-sec').textContent = String(seg).padStart(2,'0');
 }
 atualizar();
@@ -708,7 +714,7 @@ function verificarJacare(val) {
     inp.blur();
     setTimeout(() => {
       document.getElementById('jacare-modal').style.display = 'none';
-      abrirEE('🐊🍎 verificado!', 'yep, é você de verdade!\n\noi, lindinha 💜\n\nfeliz 1 ano, bb. te amo muito.');
+      abrirEE('🐊🍎 verificado!', 'yep, é você de verdade!\n\noi, lindinha 🤍\n\nfeliz 1 ano, bb. te amo muito.');
     }, 800);
   } else if (normalized.length > 3) {
     fb.style.color = 'rgba(255,255,255,.4)';
@@ -742,7 +748,7 @@ if (window.DeviceMotionEvent) {
       if (shakeCount === 1) toast('🐊 agita mais...', 1500);
       if (shakeCount >= 3) {
         shakeCount = 0;
-        abrirEE('🎉 você chacoalhou!', 'tá bem, tá bem — encontrei você! oi bb 💜\n\njá que você encontrou isso: saiba que eu fico pensando em você mais do que deveria. sem arrependimento nenhum.');
+        abrirEE('🎉 Você é a razão do meu tesaum totosa!', 'Penso em você todo tempo momor 🤍');
       }
     }
     lastX=a.x; lastY=a.y; lastZ=a.z;
